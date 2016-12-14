@@ -1,0 +1,19 @@
+{
+  "name": "spotify-recommend",
+  "version": "0.0.1",
+  "description": "spotify recomender",
+  "main": "server.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ailijic/spotify-recommend.git"
+  },
+  "author": "ailijic",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/ailijic/spotify-recommend/issues"
+  },
+  "homepage": "https://github.com/ailijic/spotify-recommend#readme"
+}
