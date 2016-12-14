@@ -32,13 +32,26 @@ function start () {
       type: 'artist'
     })
 
-    searchReq.on('end', (item) => {
-      const artist = item.artists.items[0]
-      res.json(artist)
-    })
-
     searchReq.on('error', (code) => {
       res.sendStatus(code)
+    })
+
+    searchReq.on('end', (item) => {
+      let artist = item.artists.items[0]
+      console.log(artist)
+      // res.json(artist)
+
+      const endpoint = `artists/${artist.id}/related-artists`
+      const relatedArtist = getFromApi(endpoint)
+
+      relatedArtist.on('end', (item) => {
+        artist.related = item.artists
+        res.json(artist)
+      })
+
+      relatedArtist.on('error', (code) => {
+        res.sendStatus(code)
+      })
     })
   })
 
