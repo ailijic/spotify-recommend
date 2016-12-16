@@ -37,16 +37,35 @@ function start () {
     })
 
     searchReq.on('end', (item) => {
-      let artist = item.artists.items[0]
-      console.log(artist)
-      // res.json(artist)
+      let artists = item.artists.items[0]
 
-      const endpoint = `artists/${artist.id}/related-artists`
+      const endpoint = `artists/${artists.id}/related-artists`
       const relatedArtist = getFromApi(endpoint)
 
       relatedArtist.on('end', (item) => {
-        artist.related = item.artists
-        res.json(artist)
+        artists.related = item.artists
+
+        // Get Top Tracks
+        let artistsRetrieved = 0
+        function ifComplete (artistsRetrieved) {
+          if (artistsRetrieved === artists.related.length) {
+            res.json(artists)
+          }
+        }
+        artists.related.forEach((artist, index) => {
+          const endpoint = `artists/${artist.id}/top-tracks?country=US`
+          const topTracks = getFromApi(endpoint)
+
+          topTracks.on('end', (obj) => {
+            artists.related[index].tracks = obj.tracks
+            artistsRetrieved += 1
+            ifComplete(artistsRetrieved)
+          })
+
+          topTracks.on('error', (code) => {
+            res.sendStatus(code)
+          })
+        })
       })
 
       relatedArtist.on('error', (code) => {
